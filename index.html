@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#FFFF01">
+<meta name="robots" content="noindex, nofollow">
+<title>Propuestas por provincia · Tonconi Puno</title>
+<meta name="description" content="Explora por provincia las propuestas del equipo técnico para Puno.">
+<meta property="og:title" content="Propuestas para las 13 provincias de Puno">
+<meta property="og:description" content="Elige tu provincia en el mapa y filtra las propuestas por tipo de obra.">
+<meta property="og:image" content="logo.jpg">
+<link rel="icon" href="logo.jpg">
+<style>
+  :root{ --rojo:#FE0002; --oro:#FFFF01; --carbon:#1E1E24; --humo:#F4F5F7; --gris:#5b5e68; --linea:#e1e3e8; --agua:#dbeafe; }
+  *{ box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html{ -webkit-text-size-adjust:100%; scroll-behavior:smooth; }
+  body{ margin:0; font-family:"Segoe UI",system-ui,Arial,sans-serif; background:#fff; color:var(--carbon); line-height:1.45; padding-bottom:env(safe-area-inset-bottom); }
+  header{ background:var(--oro); border-bottom:4px solid var(--rojo); }
+  .wrap{ max-width:1080px; margin:0 auto; padding:0 14px; }
+  .top{ display:flex; align-items:center; gap:10px; padding:9px 0; }
+  .top img{ width:52px; height:52px; border-radius:10px; border:2px solid var(--rojo); object-fit:cover; flex:none; }
+  .top h1{ font-size:clamp(16px,4.6vw,28px); margin:0; line-height:1.15; font-weight:900; }
+  .top small{ display:block; font-size:12px; color:#333; font-weight:600; }
+  .aviso{ background:var(--carbon); color:#fff; font-size:12px; padding:6px 0; line-height:1.3; }
+  .aviso b{ background:var(--oro); color:var(--carbon); padding:0 6px; border-radius:4px; margin-right:4px; }
+  main{ padding:14px 0 70px; }
+  h2{ font-size:18px; margin:0 0 8px; font-weight:900; display:flex; align-items:center; }
+  .paso{ flex:none; background:var(--rojo); color:#fff; border-radius:50%; width:26px; height:26px; text-align:center; line-height:26px; font-size:14px; margin-right:8px; }
+  .grid-layout{ display:grid; grid-template-columns:minmax(0,1fr); gap:20px; }
+
+  .hint{ font-size:13px; background:#fffde0; border:2px dashed #d8d000; border-radius:10px; padding:6px 10px; margin:0 0 8px; }
+  .hint .d{ display:none; } .hint .m{ display:inline; }
+  .mapabox{ background:var(--agua); border-radius:14px; padding:6px; position:relative; }
+  #svg{ display:block; width:100%; height:auto; margin:0 auto; touch-action:manipulation; }
+  .prov{ stroke:#1E1E24; stroke-width:2.2; stroke-linejoin:round; cursor:pointer; transition:fill .15s; outline:none; }
+  @media(hover:hover){ .prov:hover{ fill:#ff8a8a !important; stroke:var(--rojo); stroke-width:4; } }
+  .prov:focus-visible{ stroke:var(--rojo); stroke-width:4; }
+  .prov.sel{ fill:var(--rojo) !important; stroke:var(--carbon); stroke-width:4; }
+  .lbl{ font:800 32px "Segoe UI",Arial,sans-serif; text-anchor:middle; pointer-events:none; paint-order:stroke; stroke:#fff; stroke-width:7px; stroke-linejoin:round; fill:var(--carbon); }
+  .cnt{ font:900 27px "Segoe UI",Arial,sans-serif; text-anchor:middle; pointer-events:none; fill:#fff; }
+  .cntbg{ fill:var(--carbon); pointer-events:none; }
+  .tip{ position:fixed; z-index:20; pointer-events:none; background:var(--carbon); color:#fff; border-radius:10px; padding:8px 11px; font-size:13px; max-width:230px; box-shadow:0 4px 14px rgba(0,0,0,.3); display:none; }
+  .tip b{ font-size:15px; display:block; }
+  .tip .go{ color:var(--oro); font-weight:700; margin-top:3px; display:block; }
+  .leyenda{ display:flex; flex-wrap:wrap; gap:4px 10px; font-size:12px; color:var(--gris); margin:8px 2px 0; align-items:center; }
+  .sw{ display:inline-block; width:13px; height:13px; border:1.5px solid var(--carbon); border-radius:3px; vertical-align:-2px; margin-right:3px; }
+  .selinfo{ margin-top:10px; border:2px solid var(--carbon); border-radius:12px; padding:10px 12px; background:#fff; }
+  .selinfo .n{ font-weight:900; font-size:16px; }
+  .selinfo .s{ font-size:13px; color:var(--gris); }
+  .selinfo .row{ display:flex; gap:8px; margin-top:8px; flex-wrap:wrap; }
+  .sel-row{ display:flex; gap:8px; margin:10px 0 0; flex-wrap:wrap; }
+  select,input[type=search]{ font:inherit; font-size:16px; padding:11px 12px; min-height:46px; border:2px solid var(--linea); border-radius:12px; background:#fff; color:var(--carbon); }
+  select{ flex:1; min-width:140px; }
+  input[type=search]{ width:100%; }
+  .chips{ display:flex; gap:7px; margin:8px -14px 10px; padding:2px 14px 6px; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none; }
+  .chips::-webkit-scrollbar{ display:none; }
+  .chip{ flex:none; white-space:nowrap; border:2px solid var(--carbon); background:#fff; border-radius:22px; padding:8px 14px; min-height:40px; font:inherit; font-size:14px; font-weight:700; cursor:pointer; }
+  .chip.on{ background:var(--carbon); color:#fff; }
+  .resumen{ background:var(--humo); border-left:6px solid var(--rojo); padding:9px 12px; border-radius:0 10px 10px 0; font-size:14px; margin:8px 0 12px; }
+  .kpis{ display:flex; gap:18px; flex-wrap:wrap; margin-top:4px; }
+  .kpis div{ font-size:12.5px; color:var(--gris); }
+  .kpis b{ display:block; font-size:18px; color:var(--carbon); }
+  .lista{ display:flex; flex-direction:column; gap:14px; }
+  .seccion{ font-size:12.5px; font-weight:800; text-transform:uppercase; letter-spacing:.04em; color:var(--rojo); margin:6px 0 0; }
+  .card{ border:2px solid var(--linea); border-radius:16px; background:#fff; overflow:hidden; }
+  .img{ position:relative; width:100%; aspect-ratio:600/260; background:#eee; overflow:hidden; }
+  .img svg,.img img{ width:100%; height:100%; display:block; object-fit:cover; }
+  .img .star{ position:absolute; right:8px; top:8px; background:var(--oro); color:var(--carbon); font-size:12px; font-weight:900; padding:3px 10px; border-radius:20px; border:2px solid var(--carbon); }
+  .card.bandera{ border-color:var(--rojo); }
+  .img .ref{ position:absolute; left:8px; bottom:8px; background:rgba(30,30,36,.78); color:#fff; font-size:11px; font-weight:700; padding:2px 8px; border-radius:20px; }
+  .cb{ padding:12px 14px 14px; }
+  .cb h3{ margin:0 0 6px; font-size:17px; line-height:1.25; }
+  .badges{ display:flex; flex-wrap:wrap; gap:6px; margin-bottom:7px; }
+  .b{ font-size:11.5px; font-weight:800; padding:2px 9px; border-radius:20px; background:var(--carbon); color:#fff; }
+  .b.t{ background:var(--oro); color:var(--carbon); }
+  .b.f{ background:#fff; color:var(--carbon); border:1.5px solid var(--carbon); }
+  .cb p{ margin:0 0 9px; font-size:14.5px; }
+  .meta{ display:grid; grid-template-columns:1fr 1fr; gap:6px 12px; background:var(--humo); border-radius:10px; padding:9px 11px; }
+  .meta span{ color:var(--gris); display:block; font-size:11px; text-transform:uppercase; letter-spacing:.03em; line-height:1.2; }
+  .meta b{ font-size:16px; }
+  .fuente{ font-size:12px; color:var(--gris); margin-top:7px; }
+  .vacio{ text-align:center; color:var(--gris); padding:18px; border:2px dashed var(--linea); border-radius:14px; font-size:14px; }
+  .acciones{ display:flex; gap:8px; flex-wrap:wrap; margin-top:16px; }
+  .btn{ font:inherit; font-size:15px; font-weight:800; background:var(--rojo); color:#fff; border:2px solid var(--rojo); padding:10px 16px; min-height:46px; border-radius:12px; cursor:pointer; }
+  .btn.alt{ background:#fff; color:var(--carbon); border-color:var(--carbon); }
+  .acciones .btn{ flex:1; }
+  dialog{ border:0; border-radius:16px; padding:20px; width:min(340px,92vw); text-align:center; }
+  dialog::backdrop{ background:rgba(0,0,0,.55); }
+  #qr{ display:flex; justify-content:center; margin:10px 0; }
+  footer{ background:var(--carbon); color:#ddd; font-size:12.5px; padding:16px 0 calc(16px + env(safe-area-inset-bottom)); }
+  footer b{ color:#fff; }
+  #upmap{ position:fixed; right:12px; bottom:calc(12px + env(safe-area-inset-bottom)); z-index:15; display:none; box-shadow:0 4px 14px rgba(0,0,0,.35); min-height:44px; }
+  #upmap.on{ display:block; }
+  .sr{ position:absolute; left:-9999px; }
+
+  @media(min-width:860px){
+    .wrap{ padding:0 20px; }
+    .top{ gap:14px; padding:12px 0; } .top img{ width:64px; height:64px; } .top small{ font-size:13px; }
+    .aviso{ font-size:13px; }
+    h2{ font-size:19px; }
+    .grid-layout{ grid-template-columns:440px minmax(0,1fr); align-items:start; gap:26px; }
+    .izq{ position:sticky; top:12px; }
+    #svg{ max-height:640px; }
+    .hint .d{ display:inline; } .hint .m{ display:none; }
+    .chips{ flex-wrap:wrap; overflow:visible; margin:8px 0 12px; padding:0; }
+    .acciones .btn{ flex:none; }
+    .lista{ display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); }
+    .lista .seccion{ grid-column:1/-1; }
+    .lista .vacio{ grid-column:1/-1; }
+    #upmap{ display:none !important; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap top">
+    <img src="logo.jpg" alt="Logo de la campaña">
+    <div>
+      <h1 id="titulo">Propuestas para las 13 provincias de Puno</h1>
+      <small>Campaña Ing. Jhomar Tonconi · Equipo técnico</small>
+    </div>
+  </div>
+</header>
+<div class="aviso" id="aviso" hidden><div class="wrap"><b>PROTOTIPO</b>Montos y plazos ilustrativos; no son compromisos ni cifras oficiales.</div></div>
+
+<main class="wrap">
+  <div class="grid-layout">
+    <section class="izq" id="seccmapa" aria-labelledby="h-mapa">
+      <h2 id="h-mapa"><span class="paso">1</span>Elige tu provincia</h2>
+      <div class="hint"><span class="m">👆 <b>Toca una provincia</b> para ver sus propuestas.</span><span class="d">👆 Pasa el mouse sobre una provincia para ver su resumen. <b>Haz clic</b> para filtrar y ver sus propuestas.</span></div>
+      <div class="mapabox" id="mapabox"><svg id="svg" role="group" aria-label="Mapa de las provincias de Puno"></svg></div>
+      <div class="leyenda" id="leyenda"></div>
+      <div class="selinfo" id="selinfo"></div>
+      <div class="sel-row">
+        <select id="selprov" aria-label="Provincia"></select>
+        <button class="btn alt" id="limpiar" type="button">Ver toda la región</button>
+      </div>
+    </section>
+
+    <section id="secprop" aria-labelledby="h-prop">
+      <h2 id="h-prop"><span class="paso">2</span>Filtra y revisa las propuestas</h2>
+      <label class="sr" for="buscar">Buscar</label>
+      <input id="buscar" type="search" placeholder="Buscar: agua, vía, riego…" enterkeyhint="search">
+      <div class="chips" id="chips" role="group" aria-label="Tipo de obra"></div>
+      <div class="resumen" id="resumen" aria-live="polite"></div>
+      <div class="lista" id="lista"></div>
+      <div class="acciones">
+        <button class="btn" id="compartir" type="button">Compartir enlace</button>
+        <button class="btn alt" id="verqr" type="button">Mostrar QR</button>
+      </div>
+    </section>
+  </div>
+</main>
+
+<button class="btn" id="upmap" type="button" aria-label="Volver al mapa">↑ Mapa</button>
+<div class="tip" id="tip"></div>
+
+<footer>
+  <div class="wrap">
+    <b>Importante:</b> las propuestas son de campaña y están sujetas a viabilidad técnica, presupuestal y legal. <span id="demofoot">Los montos y plazos de este prototipo son ilustrativos. Las imágenes son referenciales.</span> Última actualización: <span id="act"></span>.
+  </div>
+</footer>
+
+<dialog id="dlg">
+  <b>Escanea para abrir esta página</b>
+  <div id="qr"></div>
+  <small id="qrurl" style="word-break:break-all;color:#5b5e68"></small><br><br>
+  <button class="btn" id="cerrar" type="button">Cerrar</button>
+</dialog>
+
+<script src="datos.js"></script>
+<script src="mapa.js"></script>
+<script src="ilustraciones.js"></script>
+<script src="ilustraciones_bandera.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" defer></script>
+<script>
+(function(){
+  var P = window.PROVINCIAS, T = window.TIPOS, D = window.PROPUESTAS, C = window.CONFIG, M = window.MAPA, IL = window.ILUSTRACIONES || {}, ILB = window.ILUSTRACIONES_PROP || {};
+  var st = { prov: null, tipo: null, q: "" };
+  var NS = "http://www.w3.org/2000/svg";
+  var $ = function(id){ return document.getElementById(id); };
+  var tip = $("tip");
+  var conMouse = window.matchMedia && window.matchMedia("(hover:hover) and (pointer:fine)").matches;
+
+  $("titulo").textContent = C.titulo;
+  $("act").textContent = C.actualizado;
+  if (C.demo) $("aviso").hidden = false; else $("demofoot").textContent = "";
+
+  function norm(s){ return (s||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,""); }
+  function esc(s){ return String(s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];}); }
+  function pnom(id){ for (var i=0;i<P.length;i++) if (P[i].id===id) return P[i].nombre; return id; }
+  function soles(m){ return "S/ " + m.toLocaleString("es-PE",{minimumFractionDigits:1,maximumFractionDigits:1}) + " millones"; }
+  function propias(id){ return D.filter(function(d){ return d.alcance==="provincia" && d.provincias.indexOf(id)>-1; }); }
+  function suma(arr){ return arr.reduce(function(a,d){ return a + d.monto; },0); }
+  function color(n){ return n===0 ? "#ffffff" : n===1 ? "#fff7b0" : n===2 ? "#ffea4d" : "#ffd000"; }
+
+  // ---------- mapa SVG ----------
+  var gProv, gLbl;
+  function iniciaMapa(){
+    var svg = $("svg");
+    svg.setAttribute("viewBox", "0 0 " + M.w + " " + M.h);
+    svg.innerHTML = "";
+    gProv = document.createElementNS(NS,"g"); gLbl = document.createElementNS(NS,"g");
+    svg.appendChild(gProv); svg.appendChild(gLbl);
+    P.forEach(function(p){
+      var path = document.createElementNS(NS,"path");
+      path.setAttribute("d", M.paths[p.id]); path.setAttribute("class","prov"); path.setAttribute("data-id", p.id);
+      path.setAttribute("tabindex","0"); path.setAttribute("role","button");
+      path.addEventListener("click", function(){ elige(p.id); });
+      path.addEventListener("keydown", function(e){ if (e.key==="Enter"||e.key===" "){ e.preventDefault(); elige(p.id); } });
+      if (conMouse){
+        path.addEventListener("mousemove", function(e){ muestraTip(e, p.id); });
+        path.addEventListener("mouseenter", function(e){ muestraTip(e, p.id); });
+        path.addEventListener("mouseleave", function(){ tip.style.display="none"; });
+      }
+      gProv.appendChild(path);
+    });
+  }
+  function actualizaMapa(){
+    gLbl.innerHTML = "";
+    var paths = gProv.querySelectorAll("path");
+    for (var i=0;i<paths.length;i++){
+      var id = paths[i].getAttribute("data-id"), n = propias(id).length;
+      paths[i].style.fill = color(n);
+      paths[i].setAttribute("class","prov" + (st.prov===id ? " sel":""));
+      paths[i].setAttribute("aria-pressed", st.prov===id ? "true":"false");
+      paths[i].setAttribute("aria-label", pnom(id)+": "+n+" propuestas");
+    }
+    P.forEach(function(p){
+      var c = M.centros[p.id], n = propias(p.id).length, sel = st.prov===p.id;
+      var t = document.createElementNS(NS,"text"); t.setAttribute("x",c[0]); t.setAttribute("y",c[1]); t.setAttribute("class","lbl");
+      if (sel){ t.style.fill="#fff"; t.style.stroke="#FE0002"; }
+      t.textContent = p.corto; gLbl.appendChild(t);
+      if (n>0){
+        var g = document.createElementNS(NS,"g");
+        var ci = document.createElementNS(NS,"circle"); ci.setAttribute("cx",c[0]); ci.setAttribute("cy",c[1]+31); ci.setAttribute("r",18); ci.setAttribute("class","cntbg");
+        var tx = document.createElementNS(NS,"text"); tx.setAttribute("x",c[0]); tx.setAttribute("y",c[1]+40); tx.setAttribute("class","cnt"); tx.textContent = n;
+        g.appendChild(ci); g.appendChild(tx); gLbl.appendChild(g);
+      }
+    });
+  }
+  function muestraTip(e, id){
+    var ps = propias(id), n = ps.length;
+    tip.innerHTML = '<b>'+esc(pnom(id))+'</b>' + (n ? n+' propuesta'+(n>1?'s':'')+' · '+esc(soles(suma(ps))) : 'Sin propuestas específicas cargadas') + '<span class="go">'+(st.prov===id?'Clic para quitar el filtro':'Clic para filtrar y ver propuestas')+'</span>';
+    tip.style.display = "block";
+    var x = e.clientX + 16, y = e.clientY + 16, w = tip.offsetWidth, h = tip.offsetHeight;
+    if (x + w > window.innerWidth - 8) x = e.clientX - w - 16;
+    if (y + h > window.innerHeight - 8) y = e.clientY - h - 16;
+    tip.style.left = Math.max(8,x)+"px"; tip.style.top = Math.max(8,y)+"px";
+  }
+  function elige(id){ st.prov = (st.prov===id ? null : id); render(); }
+
+  function leyenda(){
+    $("leyenda").innerHTML = '<span><i class="sw" style="background:#fff"></i>0</span><span><i class="sw" style="background:#fff7b0"></i>1</span><span><i class="sw" style="background:#ffea4d"></i>2</span><span><i class="sw" style="background:#ffd000"></i>3 o más propuestas</span><span><i class="sw" style="background:#FE0002"></i>Elegida</span>';
+  }
+
+  // ---------- panel de provincia elegida ----------
+  function dibujaSelInfo(){
+    var el = $("selinfo");
+    if (!st.prov){
+      el.innerHTML = '<div class="n">Toda la región Puno</div><div class="s">Aún no elegiste provincia. Toca una en el mapa.</div>';
+      return;
+    }
+    var ps = propias(st.prov);
+    el.innerHTML = '<div class="n">'+esc(pnom(st.prov))+'</div><div class="s">'+ps.length+' propuesta(s) · '+esc(soles(suma(ps)))+' (ilustrativo)</div>'
+      + '<div class="row"><button class="btn" id="verprop" type="button">Ver propuestas ↓</button><button class="btn alt" id="quita" type="button">Quitar</button></div>';
+    $("verprop").onclick = function(){ $("secprop").scrollIntoView({behavior:"smooth", block:"start"}); };
+    $("quita").onclick = function(){ st.prov = null; render(); };
+  }
+
+  // ---------- select y chips ----------
+  function dibujaSelect(){
+    var s = $("selprov"); s.innerHTML = '<option value="">Toda la región Puno</option>';
+    P.slice().sort(function(a,b){ return a.nombre.localeCompare(b.nombre,"es"); }).forEach(function(p){
+      var o = document.createElement("option"); o.value=p.id; o.textContent=p.nombre; s.appendChild(o);
+    });
+    s.onchange = function(){ st.prov = s.value || null; render(); };
+  }
+  function dibujaChips(){
+    var c = $("chips"); c.innerHTML="";
+    function mk(txt, val){
+      var b = document.createElement("button"); b.type="button";
+      b.className = "chip" + (st.tipo===val ? " on":""); b.textContent = txt;
+      b.setAttribute("aria-pressed", st.tipo===val ? "true":"false");
+      b.onclick = function(){ st.tipo = val; render(); };
+      c.appendChild(b);
+    }
+    mk("Todos", null);
+    T.forEach(function(t){ mk(t, t); });
+  }
+
+  // ---------- lista ----------
+  function pasa(d){
+    if (st.tipo && d.tipo!==st.tipo) return false;
+    if (st.q && norm(d.titulo+" "+d.descripcion+" "+d.tipo).indexOf(norm(st.q))===-1) return false;
+    return true;
+  }
+  function imagen(d){
+    var inner = d.imagen ? '<img src="'+esc(d.imagen)+'" alt="'+esc(d.titulo)+'" loading="lazy">' : (ILB[d.id] || IL[d.tipo] || "");
+    var et = (!d.imagen && ILB[d.id]) ? "Recreación artística · referencial" : "Imagen referencial";
+    return '<div class="img">'+inner+(d.bandera ? '<span class="star">★ Propuesta bandera</span>' : '')+'<span class="ref">'+et+'</span></div>';
+  }
+  function tarjeta(d){
+    var donde = d.alcance==="region" ? "Toda la región" : d.provincias.map(pnom).join(", ");
+    var tot = d.alcance==="region" ? " (total regional)" : "";
+    return '<article class="card'+(d.bandera?' bandera':'')+'">'+imagen(d)+'<div class="cb"><div class="badges"><span class="b t">'+esc(d.tipo)+'</span><span class="b f">'+esc(d.fase)+'</span><span class="b">'+esc(donde)+'</span></div>'
+      + '<h3>'+esc(d.titulo)+'</h3><p>'+esc(d.descripcion)+'</p>'
+      + '<div class="meta"><div><span>Inversión estimada'+tot+'</span><b>'+esc(soles(d.monto))+'</b></div><div><span>Plazo estimado</span><b>'+d.plazo+' meses</b></div></div>'
+      + '<div class="fuente">Fuente: '+esc(d.fuente)+'</div></div></article>';
+  }
+  function kpis(arr){
+    return '<div class="kpis"><div><b>'+arr.length+'</b>propuestas</div><div><b>'+esc(soles(suma(arr)))+'</b>inversión estimada</div></div>';
+  }
+  function dibujaLista(){
+    var l = $("lista"), html = "", base = D.filter(pasa).map(function(d,i){ return {d:d,i:i}; }).sort(function(a,b){ return (b.d.bandera?1:0)-(a.d.bandera?1:0) || a.i-b.i; }).map(function(x){ return x.d; });
+    if (st.prov){
+      var pr = base.filter(function(d){ return d.alcance==="provincia" && d.provincias.indexOf(st.prov)>-1; });
+      var rg = base.filter(function(d){ return d.alcance==="region"; });
+      html += '<div class="seccion">En '+esc(pnom(st.prov))+'</div>';
+      html += pr.length ? pr.map(tarjeta).join("") : '<div class="vacio">No hay propuestas específicas con estos filtros para esta provincia.</div>';
+      if (rg.length) html += '<div class="seccion">Para toda la región (incluye '+esc(pnom(st.prov))+')</div>' + rg.map(tarjeta).join("");
+      $("resumen").innerHTML = '<b>'+esc(pnom(st.prov))+'</b> · propuestas específicas' + kpis(pr) + '<div style="font-size:12.5px;color:#5b5e68;margin-top:4px">Más '+rg.length+' propuesta(s) regional(es) que también la alcanzan.</div>';
+    } else {
+      html = base.length ? base.map(tarjeta).join("") : '<div class="vacio">No hay propuestas con esos filtros.</div>';
+      $("resumen").innerHTML = '<b>Toda la región Puno</b> · elige una provincia en el mapa para ver las suyas' + kpis(base);
+    }
+    l.innerHTML = html;
+  }
+
+  function render(){
+    $("selprov").value = st.prov || "";
+    actualizaMapa(); dibujaSelInfo(); dibujaChips(); dibujaLista();
+    try{ history.replaceState(null,"", "#"+(st.prov||"")); }catch(e){}
+  }
+
+  // ---------- eventos ----------
+  $("buscar").addEventListener("input", function(e){ st.q = e.target.value; dibujaLista(); });
+  $("limpiar").onclick = function(){ st.prov=null; st.tipo=null; st.q=""; $("buscar").value=""; render(); };
+  function urlActual(){ return location.href.split("#")[0].split("?")[0] + (st.prov ? "#"+st.prov : ""); }
+  $("compartir").onclick = function(){
+    var url = urlActual();
+    if (navigator.share){ navigator.share({ title: C.titulo, url: url }).catch(function(){}); }
+    else if (navigator.clipboard){ navigator.clipboard.writeText(url).then(function(){ alert("Enlace copiado"); }); }
+    else { prompt("Copia el enlace:", url); }
+  };
+  $("verqr").onclick = function(){
+    var url = urlActual();
+    var box = $("qr"); box.innerHTML = ""; $("qrurl").textContent = url;
+    try { new QRCode(box, { text: url, width: 220, height: 220, correctLevel: QRCode.CorrectLevel.M }); }
+    catch(e){ box.textContent = "No se pudo generar el QR sin conexión."; }
+    $("dlg").showModal();
+  };
+  $("cerrar").onclick = function(){ $("dlg").close(); };
+
+  // botón flotante "↑ Mapa" (solo celular, cuando el mapa sale de la pantalla)
+  var up = $("upmap");
+  up.onclick = function(){ $("seccmapa").scrollIntoView({behavior:"smooth", block:"start"}); };
+  if ("IntersectionObserver" in window){
+    new IntersectionObserver(function(es){ up.classList.toggle("on", !es[0].isIntersecting); }, { threshold: 0.05 }).observe($("mapabox"));
+  }
+
+  var h = (location.hash||"").replace("#","");
+  P.forEach(function(p){ if (p.id===h) st.prov = h; });
+
+  iniciaMapa(); leyenda(); dibujaSelect(); render();
+})();
+</script>
+</body>
+</html>
