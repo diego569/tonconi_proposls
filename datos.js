@@ -41,11 +41,11 @@ window.TIPOS = [
 // alcance: "provincia" o "region"
 window.PROPUESTAS = [
   // ---------------- PUNO ----------------
-  { id: 1, bandera: true, titulo: "Bulevar turístico en el lago Titicaca", tipo: "Turismo e infraestructura", alcance: "provincia", provincias: ["puno"],
+  { id: 1, bandera: true, imagen: "img/bulevar", titulo: "Bulevar turístico en el lago Titicaca", tipo: "Turismo e infraestructura", alcance: "provincia", provincias: ["puno"],
     fase: "Perfil", monto: 85.0, plazo: 30,
     descripcion: "Paseo peatonal, miradores y muelle turístico frente a la bahía de Puno, con áreas verdes y espacios para artesanos locales.",
     fuente: "Propuesta del candidato (El Búho, 30 oct. 2026). Cifras ilustrativas." },
-  { id: 2, bandera: true, titulo: "Segunda circunvalación de Puno", tipo: "Vial y transporte", alcance: "provincia", provincias: ["puno"],
+  { id: 2, bandera: true, imagen: "img/circunvalacion", titulo: "Segunda circunvalación de Puno", tipo: "Vial y transporte", alcance: "provincia", provincias: ["puno"],
     fase: "Propuesta", monto: 240.0, plazo: 36,
     descripcion: "Nueva vía de evitamiento para descongestionar el tráfico pesado de la ciudad y conectar los accesos norte y sur.",
     fuente: "Propuesta del candidato (El Búho, 30 oct. 2026). Cifras ilustrativas." },
@@ -159,11 +159,11 @@ window.PROPUESTAS = [
     fase: "Propuesta", monto: 480.0, plazo: 48,
     descripcion: "Meta regional con hoja de ruta por provincia, priorizando centros poblados rurales sin servicio.",
     fuente: "Propuesta del candidato (La Decana, 19 oct. 2026). Cifras ilustrativas." },
-  { id: 24, bandera: true, titulo: "Carreteras interprovinciales asfaltadas", tipo: "Vial y transporte", alcance: "region", provincias: [],
+  { id: 24, bandera: true, imagen: "img/carreteras", titulo: "Carreteras interprovinciales asfaltadas", tipo: "Vial y transporte", alcance: "region", provincias: [],
     fase: "Propuesta", monto: 900.0, plazo: 48,
     descripcion: "Programa de pavimentación de corredores que conectan las capitales provinciales.",
     fuente: "Equipo de campaña. Cifras ilustrativas." },
-  { id: 25, bandera: true, titulo: "Riego tecnificado, agro y ganadería", tipo: "Riego, agro y ganadería", alcance: "region", provincias: [],
+  { id: 25, bandera: true, imagen: "img/riego", titulo: "Riego tecnificado, agro y ganadería", tipo: "Riego, agro y ganadería", alcance: "region", provincias: [],
     fase: "Propuesta", monto: 350.0, plazo: 48,
     descripcion: "Programa regional de riego, reservorios y asistencia técnica para productores.",
     fuente: "Equipo de campaña. Cifras ilustrativas." },

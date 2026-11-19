@@ -29,10 +29,10 @@ window.ILUSTRACIONES_PROP = (function(){
     '</svg>';
 
   // 2 · Segunda circunvalación de Puno (vista aérea)
-  o[2] = H + 'Recreación artística: segunda circunvalación vista desde el aire">' +
+  o[2] = H + 'Recreación artística: segunda circunvalación entre barrios y cerros">' +
     '<defs><linearGradient id="b2l" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5eb0e8"/><stop offset="1" stop-color="#2f79c2"/></linearGradient></defs>' +
     '<rect width="600" height="260" fill="#d9c9a3"/>' +
-    '<path d="M330 0 H600 V150 Q520 170 470 120 Q430 70 380 60 Q340 40 330 0Z" fill="url(#b2l)"/>' +
+    '<path d="M330 0 H600 V140 Q520 160 470 110 Q430 60 380 50 Q340 30 330 0Z" fill="#c7ab80"/>' +
     '<path d="M0 0 H150 Q100 40 120 90 Q60 120 0 100Z" fill="#b69b73"/>' +
     '<path d="M0 190 Q60 160 130 200 Q90 235 0 245Z" fill="#8fae63"/><path d="M420 215 Q500 190 600 225 V260 H400Z" fill="#8fae63"/>' +
     '<g fill="#efe6d2" stroke="#c9b894" stroke-width="1"><rect x="150" y="100" width="22" height="16"/><rect x="176" y="100" width="22" height="16"/><rect x="202" y="100" width="22" height="16"/><rect x="228" y="100" width="22" height="16"/><rect x="254" y="100" width="22" height="16"/><rect x="150" y="122" width="22" height="16"/><rect x="176" y="122" width="22" height="16"/><rect x="202" y="122" width="22" height="16"/><rect x="228" y="122" width="22" height="16"/><rect x="254" y="122" width="22" height="16"/><rect x="150" y="144" width="22" height="16"/><rect x="176" y="144" width="22" height="16"/><rect x="202" y="144" width="22" height="16"/><rect x="228" y="144" width="22" height="16"/><rect x="254" y="144" width="22" height="16"/><rect x="176" y="166" width="22" height="16"/><rect x="202" y="166" width="22" height="16"/><rect x="228" y="166" width="22" height="16"/></g>' +
